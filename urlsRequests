@@ -1,0 +1,54 @@
+#not Secured url
+
+1) Registration url
+	url: localhost:8080/register/reg_user2
+	method : post
+	body : { "mobile_number":"", "pswd":"" }
+	dataType : json
+
+2) Validate OTP
+	url : localhost:8080/register/validateOtp?mobilenumber=9164503045&&otp=308882
+	method : get/url
+	variables: mobilenumber,otp
+
+3) Forgot Password
+	url : localhost:8080/forgotpassword/forgotPasswordOtp
+	method : post
+	body : { "mobilenumber":"" }
+	dataType : Json
+
+4) Validate OTP (Forgot Pasword Request)
+	url : localhost:8080/forgotpassword/validateFpOtp?mobilenumber=9164503045&&otp=642370;
+	method : GET/URL
+	variables: mobilenumber,otp
+	
+5) Login URL
+
+	url : localhost:8080/auth
+	method : POST
+	body : {"mobilenumber":"","password":""}
+
+#SECURED URLS
+
+	Have to send Bearer token in Authorization Header with every Request
+	
+	
+1) STATE LIST
+
+	URL : localhost:8080/states/
+	METHOD : GET
+
+2) CITY LIST dependednt on STATE
+	
+	URL : localhost:8080/states/city/{id}
+	method : GET
+	varibale : id , id is state id
+	
+3) GET GENDERS 
+	
+	URL : localhost:8080/gender/
+	method : GET
+	
+
+
+
