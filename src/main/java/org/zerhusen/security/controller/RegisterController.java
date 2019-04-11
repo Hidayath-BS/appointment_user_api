@@ -21,17 +21,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.zerhusen.model.security.Ak_city;
-import org.zerhusen.model.security.Ak_state;
-import org.zerhusen.model.security.Authority;
-import org.zerhusen.model.security.User;
-import org.zerhusen.security.repository.CityRepository;
-import org.zerhusen.security.repository.Rolerepository;
-import org.zerhusen.security.repository.StateRepository;
-import org.zerhusen.security.repository.UserRepository;
+import org.zerhusen.ams.model.security.User;
+import org.zerhusen.ams.repository.security.CityRepository;
+import org.zerhusen.ams.repository.security.Rolerepository;
+import org.zerhusen.ams.repository.security.StateRepository;
+import org.zerhusen.ams.repository.security.UserRepository;
 import org.zerhusen.service.MessageService;
 import org.zerhusen.service.OtpService;
 import org.zerhusen.service.PasswordEncoderCustom;
+
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value="/register")

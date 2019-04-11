@@ -5,21 +5,28 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.zerhusen.model.ams.Ams_patient_users;
-import org.zerhusen.model.security.User;
-import org.zerhusen.repository.ams.AmsPatientUsersRepository;
+import org.zerhusen.ams.model.Ams_patient_users;
+import org.zerhusen.ams.repository.AmsPatientUsersRepository;
 import org.zerhusen.security.JwtUserFactory;
-import org.zerhusen.security.repository.UserRepository;
+
+
+
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private AmsPatientUsersRepository userRepository;
+	@Autowired
+    public AmsPatientUsersRepository userRepo;
+    
+    
+    public JwtUserDetailsService(AmsPatientUsersRepository userRepo) {
+    	this.userRepo = userRepo;
+    }
 
+    
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Ams_patient_users user = userRepository.findByEmail(email);
+        Ams_patient_users user = userRepo.findByEmail(email);
 
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with mobilenumber '%s'.", email));
