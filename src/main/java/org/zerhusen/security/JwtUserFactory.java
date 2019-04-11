@@ -6,10 +6,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.zerhusen.model.ams.AmsPatientAuthority;
-import org.zerhusen.model.ams.Ams_patient_users;
-import org.zerhusen.model.security.Authority;
-import org.zerhusen.model.security.User;
+import org.zerhusen.ams.model.AmsPatientAuthority;
+import org.zerhusen.ams.model.Ams_patient_users;
+
+
+
 
 public final class JwtUserFactory {
 
