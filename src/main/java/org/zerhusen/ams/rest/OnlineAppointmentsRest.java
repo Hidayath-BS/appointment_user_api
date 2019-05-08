@@ -86,7 +86,11 @@ public class OnlineAppointmentsRest {
 		
 		LocalDate date = LocalDate.parse(json.getString("date"));
 		String patientName = json.getString("fullName");
-		LocalDate dateOfBirth = LocalDate.parse(json.getString("dob"));
+		
+		int age = json.getInt("age");
+		
+		
+		
 		String gender = json.getString("gender");
 		
 		String  contactNumber = json.getString("mobileNumber");
@@ -97,26 +101,35 @@ public class OnlineAppointmentsRest {
 		boolean bp = json.getBoolean("bp");
 		String bpDuration = json.getString("bpDuration");
 		
-		boolean cardiac = json.getBoolean("cardiac");
-		String cardiacDuration = json.getString("cardiacDuration");
+		boolean cardiac = json.getBoolean("cardiac");		
 		
 		boolean asthama = json.getBoolean("asthma");
-		String asthamaDuration = json.getString("asthmaDuration");
-		
+
 		boolean eyeProblem = json.getBoolean("eyeProblem");
 		String eyeProbDetails = json.getString("eyeProblemDetails");
 		
 		boolean eyeDrops = json.getBoolean("eyeDrops");
 		String dropDetails = json.getString("dropDetails");
 		
+		boolean drugAllergy = json.getBoolean("drugAllergy");
+		String drugAllergyDetails = json.getString("drugAllergyDuration");
+		
+		boolean medCondition = json.getBoolean("otherMedicalCondition");
+		String medConditionDetails = json.getString("otherMedicalConditionDuration");
+		
+		String refBy = json.getString("refferedBy");
+		
+		
+		
 		AmsAvailableTimeSlots slot = slotsRepository.findById(json.getInt("slot"));
 		
 		if(slot!=null && user != null) {
 			int onlineCount = slot.getOnlineCount();
 			
-			AmsAppointments appointment = new AmsAppointments(date, patientName, dateOfBirth, gender, diabetic, diabeticDuration,
-					bp, bpDuration, cardiac, cardiacDuration, asthama, asthamaDuration, contactNumber, emailId, (byte) 1, (byte) 1,
-					eyeProblem, eyeProbDetails, eyeDrops, dropDetails, false, false, true);
+//			AmsAppointments appointment = new AmsAppointments(date, patientName, age, gender, diabetic, diabeticDuration, bp, bpDuration, cardiac, asthama, contactNumber, emailId, (byte) 1, (byte) 1, eyeProblem, eyeProbDetails, eyeDrops, dropDetails, false, false, true, false, drugAllergy, drugAllergyDetails, medCondition, medConditionDetails, refBy);
+			
+			AmsAppointments appointment = new AmsAppointments(date, patientName, age, gender, diabetic, diabeticDuration, bp, bpDuration, cardiac, asthama, contactNumber, emailId, (byte) 1, (byte) 1, eyeProblem, eyeProbDetails, eyeDrops, dropDetails, false, false, true, false, drugAllergy, drugAllergyDetails, medCondition, medConditionDetails, refBy, json.getString("addressLine1") , json.getString("addressLine2") , json.getString("pincode") );
+			
 			
 			appointment.setPatientUser(user);
 			

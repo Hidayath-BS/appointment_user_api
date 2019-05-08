@@ -3,6 +3,8 @@ package org.zerhusen.ams.rest;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONException;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +31,7 @@ import org.zerhusen.ams.repository.AmsAppointmentsRepository;
 import org.zerhusen.ams.repository.AmsAvailableTimeSlotRepository;
 import org.zerhusen.ams.repository.AmsPatientUsersRepository;
 import org.zerhusen.ams.repository.AmsRescheduleRepository;
+import org.zerhusen.config.EmailConfig;
 import org.zerhusen.security.JwtTokenUtil;
 
 @RestController
@@ -46,6 +51,12 @@ public class RescheduleAppointmentRest {
 	private String tokenHeader;
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+	@Autowired
+	private EmailConfig emailconifg;
+	
+	@Autowired
+	private JavaMailSender javamailSender;
 
 
 	@GetMapping("/rescheduledAppointmentList")
@@ -89,7 +100,7 @@ public class RescheduleAppointmentRest {
 	}
 	
 	@PostMapping("/ResheduledAppointments")
-	public ResponseEntity<?> postResheduledAppointments(@RequestBody String appointment) throws JSONException{
+	public ResponseEntity<?> postResheduledAppointments(@RequestBody String appointment) throws JSONException, MessagingException{
 		JSONObject jsonobj = new JSONObject(appointment);
 		LocalDate date = LocalDate.parse(jsonobj.getString("datee"));
 		AmsAppointments appointmentId = appointmentRepo.findById(jsonobj.getInt("appointmentId"));
@@ -102,10 +113,41 @@ public class RescheduleAppointmentRest {
 			resheduleAppointment.setAppointment(appointmentId);
 			resheduleAppointment.setSlot(availableTimeSlot);
 			appointmentResheduleRepo.save(resheduleAppointment);
+			
+			String email = appointmentId.getEmailId();
+			
+			String subject = "Rescheduled !!!, Appointment on "+availableTimeSlot.getDate()+ " At : "+availableTimeSlot.getSlot().getStartTime();
+			
+			String text = "<html><body>"
+					+ "<h4>GREETINGS FORM BANGALORE NETHRALAYA !!!</h4>"
+					+ "<p>"
+					+ "Hi "+appointmentId.getPatientName()+", <br>"
+					+ "You Have Opted for Reschedule of Appointment on :"+availableTimeSlot.getDate()
+					+ "<br/>"
+					+ "At "+availableTimeSlot.getSlot().getStartTime()+" , At Our Branch : "+ availableTimeSlot.getBranch().getBranchName()
+					+ "</p>"
+					+ "<hr/>"
+					+ "<p>Thank You .<br>"
+					+ "Team <b>BANGALORE NETHRALAYA</b> </p>"
+					+ "</body> </html>";
+			
+			this.reschedultEmailSender(email, subject, text);
+			
 			return new ResponseEntity<>(HttpStatus.ACCEPTED);
 		}else {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		
 	}
+	
+	public void reschedultEmailSender(String email, String subject, String text) throws MessagingException {
+		MimeMessage mail = javamailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+		helper.setFrom(emailconifg.getUsername());
+		helper.setTo(email);
+		helper.setSubject(subject);
+		helper.setText(text, true);
+		javamailSender.send(mail);
+	}
+	
 }

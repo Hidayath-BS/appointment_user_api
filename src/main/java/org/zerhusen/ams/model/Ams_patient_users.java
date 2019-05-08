@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.zerhusen.ams.model.security.Ak_city;
 import org.zerhusen.ams.model.security.Ak_state;
 
@@ -66,7 +68,8 @@ public class Ams_patient_users {
 	@Column(name="patient_code")
 	private String patientCode;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name="patient_authority",
 	joinColumns= {@JoinColumn(name="patient_id", referencedColumnName="id")},
 	inverseJoinColumns= {@JoinColumn(name="authority_id", referencedColumnName="id")})

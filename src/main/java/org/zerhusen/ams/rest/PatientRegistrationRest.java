@@ -81,8 +81,13 @@ public class PatientRegistrationRest {
 			
 			//Mail
 			String subject ="Congrats!! Now you are registered with us!!";
-			String text ="<html> <body> Hi Dear "+patient.getFirstName()+
-					" "+patient.getLastName()+"<br/>"+" Welcome to Bangalore Nethralaya"+" </body> </html>";
+			String text ="<html>"
+					+ "<body> <p> Hi Dear <b>"+patient.getFirstName()+" "+patient.getLastName()+"</b> </p>"+"<p>Welcome to <b>BANGALORE NETHRALAYA</b> <br/> "
+							+ "<hr/>"
+							+ "Your Username for Login is : "+patient.getEmail()
+							+ "Thank You <br/>"
+							+ "Team <b>BANGALORE NETHRALAYA</b></p>"
+							+ "</body> </html>";
 			registerEmail(patient.getEmail(),subject, text);
 			String text1 = "Hi Dear "+patient.getFirstName()+", \r\n" + 
 					"Thank you for registering with us.\r\n" + 
