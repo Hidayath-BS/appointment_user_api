@@ -1,5 +1,6 @@
 package org.zerhusen.ams.rest;
 
+import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,10 +57,13 @@ private UserDetailsService userDetailsService;
 
 @GetMapping("/getPatientwiseAppointment")
 public Iterable<AmsAppointments> getPatientwiseAppointment(HttpServletRequest req){
+	
+	LocalDate today = LocalDate.now();
+	
 	String token = req.getHeader(tokenHeader).substring(7);
 	String username = jwtTokenUtil.getUsernameFromToken(token);
 	Ams_patient_users user = userrepo.findByEmail(username);
-	return appointmentRepo.findAll().stream().filter(i->i.isActive()== true && i.getPatientUser() != null && i.getPatientUser().equals(user)).collect(Collectors.toList());
+	return appointmentRepo.findAll().stream().filter(i->i.isActive()== true && i.getPatientUser() != null && i.getPatientUser().equals(user) && (i.getDate().equals(today) || i.getDate().isAfter(today)) && i.isRescheduled() == false).collect(Collectors.toList());
 }
 
 @GetMapping(value="/getDoctors")

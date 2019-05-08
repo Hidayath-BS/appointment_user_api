@@ -2,6 +2,8 @@ package org.zerhusen.ams.rest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.zerhusen.ams.model.AmsPatientQueries;
 import org.zerhusen.ams.model.AmsQueryResponse;
 import org.zerhusen.ams.model.Ams_patient_users;
+import org.zerhusen.ams.payload.QueryPayload;
 import org.zerhusen.ams.repository.AmsPatientQueryRepository;
 import org.zerhusen.ams.repository.AmsPatientUsersRepository;
 import org.zerhusen.ams.repository.AmsQueryResponseRepository;
@@ -57,11 +60,28 @@ public class QueriesRest {
 	
 	
 @GetMapping(value="/getQueries")
-public Iterable<AmsPatientQueries> getQueries(HttpServletRequest req){
+public Iterable<QueryPayload> getQueries(HttpServletRequest req){
 	String token = req.getHeader(tokenHeader).substring(7);
 	String username = jwtTokenUtil.getUsernameFromToken(token);
 	Ams_patient_users user = userRepo.findByEmail(username);
-	return queryRepo.findAll().stream().filter(i-> i.isActive() == true && i.getPatient().equals(user)).collect(Collectors.toList());
+	
+	List<QueryPayload> result = new ArrayList<QueryPayload>();
+	
+	List<AmsPatientQueries> queries = queryRepo.findAll().stream().filter(i-> i.isActive() == true && i.getPatient().equals(user)).collect(Collectors.toList());
+
+	for(AmsPatientQueries query: queries) {
+		QueryPayload payload = new QueryPayload();
+		payload.setQuery(query);
+		
+		List<AmsQueryResponse> response = queriesRepo.findAll().stream().filter(i-> i.getQuery().equals(query) && i.isActive()==true).collect(Collectors.toList());
+		
+		payload.setResponses(response);
+		
+		result.add(payload);
+	}
+	
+	return result;
+
 }
 
 @GetMapping("/getQueryResponse/{id}")
