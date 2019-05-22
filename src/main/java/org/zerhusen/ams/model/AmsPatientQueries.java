@@ -22,9 +22,6 @@ public class AmsPatientQueries {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@ManyToOne
-	@JoinColumn(name="patient_id")
-	private Ams_patient_users patient;
 	
 	@Lob
 	@Column(name="query")
@@ -42,6 +39,10 @@ public class AmsPatientQueries {
 	
 	@Column(name="active")
 	private boolean active;
+	
+	@ManyToOne
+	@JoinColumn(name="conversation_id")
+	private AmsPatientConversation conversation;
 
 	public AmsPatientQueries() {
 	
@@ -61,6 +62,22 @@ public class AmsPatientQueries {
 	}
 
 	
+
+
+
+	public AmsPatientConversation getConversation() {
+		return conversation;
+	}
+
+
+
+
+
+	public void setConversation(AmsPatientConversation conversation) {
+		this.conversation = conversation;
+	}
+
+
 
 
 
@@ -104,13 +121,6 @@ public class AmsPatientQueries {
 		this.id = id;
 	}
 
-	public Ams_patient_users getPatient() {
-		return patient;
-	}
-
-	public void setPatient(Ams_patient_users patient) {
-		this.patient = patient;
-	}
 
 	public String getQuery() {
 		return query;
@@ -145,8 +155,8 @@ public class AmsPatientQueries {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (active ? 1231 : 1237);
+		result = prime * result + ((conversation == null) ? 0 : conversation.hashCode());
 		result = prime * result + id;
-		result = prime * result + ((patient == null) ? 0 : patient.hashCode());
 		result = prime * result + ((query == null) ? 0 : query.hashCode());
 		result = prime * result + ((queryDate == null) ? 0 : queryDate.hashCode());
 		result = prime * result + ((queryTime == null) ? 0 : queryTime.hashCode());
@@ -169,12 +179,12 @@ public class AmsPatientQueries {
 		AmsPatientQueries other = (AmsPatientQueries) obj;
 		if (active != other.active)
 			return false;
-		if (id != other.id)
-			return false;
-		if (patient == null) {
-			if (other.patient != null)
+		if (conversation == null) {
+			if (other.conversation != null)
 				return false;
-		} else if (!patient.equals(other.patient))
+		} else if (!conversation.equals(other.conversation))
+			return false;
+		if (id != other.id)
 			return false;
 		if (query == null) {
 			if (other.query != null)
@@ -202,9 +212,14 @@ public class AmsPatientQueries {
 
 	@Override
 	public String toString() {
-		return "AmsPatientQueries [id=" + id + ", patient=" + patient + ", query=" + query + ", status=" + status
-				+ ", queryDate=" + queryDate + ", queryTime=" + queryTime + ", active=" + active + "]";
+		return "AmsPatientQueries [id=" + id + ", query=" + query + ", status=" + status + ", queryDate=" + queryDate
+				+ ", queryTime=" + queryTime + ", active=" + active + ", conversation=" + conversation + "]";
 	}
+	
+	
+
+
+
 
 		
 	

@@ -162,19 +162,20 @@ public class OnlineAppointmentsRest {
 					"Team , BANGALORE NETHRALAYA";
 			msgService.sendSmsAppointmet(appointment.getContactNumber(), text1);
 			
-			if(json.getString("payment_method").equals("ONLINE")) {
-				
-				InstamojoPaymentUrlPayload payload = this.createPaymentRequest(appo);
-				
-				System.out.println(payload);
-				
-				return ResponseEntity.ok(payload);
-				
-				
-			}else {
-				return new ResponseEntity<>(HttpStatus.OK);
-			}
+//			if(json.getString("payment_method").equals("ONLINE")) {
+//				
+//				InstamojoPaymentUrlPayload payload = this.createPaymentRequest(appo);
+//				
+//				System.out.println(payload);
+//				
+//				return ResponseEntity.ok(payload);
+//				
+//				
+//			}else {
+//				
+//			}
 			
+			return new ResponseEntity<>(HttpStatus.OK);
 			
 			
 		}
