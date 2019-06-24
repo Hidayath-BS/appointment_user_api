@@ -1,6 +1,7 @@
 package org.zerhusen.ams.rest.availabelSlots;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.stream.Collectors;
 
 import org.json.JSONException;
@@ -26,6 +27,16 @@ public class AvailableSlotsRest {
 	@GetMapping("/getAllSlots/{date}")
 	public @ResponseBody Iterable<AmsAvailableTimeSlots> getByBrnach(@PathVariable("date") String date ) throws JSONException{
 		LocalDate localDate = LocalDate.parse(date);
-		return availSlotRepo.findAll().stream().filter(i-> i.getDate().equals(localDate) && i.isActive()==true && i.getOnlineCount()<i.getOnlinelimit()).collect(Collectors.toList());
-	}
+//		int hour = 0;
+//		int minute=0;
+//		int second=0;
+		LocalTime localTime = LocalTime.now();
+		LocalDate currDate = LocalDate.now();
+		if(localDate.equals(currDate)){
+		return availSlotRepo.findAll().stream().filter(i-> i.getDate().equals(localDate) && i.isActive()==true && i.getOnlineCount()<i.getOnlinelimit() && i.getSlot().getStartTime().isAfter(localTime)).collect(Collectors.toList());
+		}
+		else{
+			return availSlotRepo.findAll().stream().filter(i-> i.getDate().equals(localDate) && i.isActive()==true && i.getOnlineCount()<i.getOnlinelimit()).collect(Collectors.toList());
+		}
+		}
 }

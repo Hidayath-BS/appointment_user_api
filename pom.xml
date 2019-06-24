@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ams.patient</groupId>
-    <artifactId>AMS-API</artifactId>
+    <artifactId>AMS-PATIENT-API</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 

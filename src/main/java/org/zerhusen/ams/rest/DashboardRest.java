@@ -74,6 +74,18 @@ public Iterable<AmsAppointments> getPatientwiseAppointment(HttpServletRequest re
 	return appointmentRepo.findAll().stream().filter(i->i.isActive()== true && i.getPatientUser() != null && i.getPatientUser().equals(user) && (i.getDate().equals(today) || i.getDate().isAfter(today)) && i.isRescheduled() == false).collect(Collectors.toList());
 }
 
+
+
+@GetMapping(value="/getDoctors")
+public Iterable<AmsDoctorSuggestion> getdoctors(){
+	return doctorRepo.findAll().stream().filter(i->i.isActive()== true).collect(Collectors.toList());
+}
+
+@GetMapping("/getServices")
+public Iterable<Ams_Services_available> getServices(){
+	return serviceRepo.findAll().stream().filter(i->i.isActive()==true).collect(Collectors.toList());
+}
+
 @GetMapping("/getReviewDatesPatientWise")
 public Iterable<AmsAppointmentsForReview> getReviewDatePatientWise(HttpServletRequest req){
 	
@@ -84,29 +96,21 @@ public Iterable<AmsAppointmentsForReview> getReviewDatePatientWise(HttpServletRe
 	List<AmsAppointmentsForReview> result = new ArrayList<AmsAppointmentsForReview>();
 	
 	List<AmsAppointments> appointments = appointmentRepo.findAll().stream().filter(i->i.isActive()==true && i.getPatientUser()!=null && i.getPatientUser().equals(user)).collect(Collectors.toList());
-	
+	LocalDate date = LocalDate.now();
 	for(AmsAppointments appmnts : appointments) {
 		
 		AmsAppointmentsForReview review = reviewRepository.findByAppointment(appmnts);
 		
-		if(review != null) {
+		if(review != null) { 
+			if(review.getReviewDate().isAfter(date) || review.getReviewDate().equals(date) ) {
 			result.add(review);
+		}
 		}
 		
 	}
 	
 	return result;
 	
-}
-
-@GetMapping(value="/getDoctors")
-public Iterable<AmsDoctorSuggestion> getdoctors(){
-	return doctorRepo.findAll().stream().filter(i->i.isActive()== true).collect(Collectors.toList());
-}
-
-@GetMapping("/getServices")
-public Iterable<Ams_Services_available> getServices(){
-	return serviceRepo.findAll().stream().filter(i->i.isActive()==true).collect(Collectors.toList());
 }
 
 }
