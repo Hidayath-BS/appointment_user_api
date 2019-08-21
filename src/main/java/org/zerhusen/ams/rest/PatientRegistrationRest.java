@@ -101,10 +101,11 @@ public class PatientRegistrationRest {
 							+ "Team <b>BANGALORE NETHRALAYA</b></p>"
 							+ "</body> </html>";
 			registerEmail(patient.getEmail(),subject, text);
-			String text1 = "Hi Dear "+patient.getFirstName()+", \r\n" + 
-					"Thank you for registering with us.\r\n" + 
-					"Team BANGALORE NETHRALAYA";
-			msgService.sendSmsRegister(patient.getMobileNumber(), text1);
+			
+			String text1 = "Dear "+patient.getFirstName()+",\r\n" + 
+					"Thank you for registering with Bangalore Nethralya.";
+			
+			msgService.sendMessage(text1, patient.getMobileNumber());
 			return new ResponseEntity<>(HttpStatus.ACCEPTED);
 		}
 		

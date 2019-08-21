@@ -33,6 +33,7 @@ import org.zerhusen.ams.repository.AmsPatientUsersRepository;
 import org.zerhusen.ams.repository.AmsRescheduleRepository;
 import org.zerhusen.config.EmailConfig;
 import org.zerhusen.security.JwtTokenUtil;
+import org.zerhusen.service.MessageService;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -57,6 +58,9 @@ public class RescheduleAppointmentRest {
 	
 	@Autowired
 	private JavaMailSender javamailSender;
+	
+	@Autowired
+	private MessageService messageService;
 
 
 	@GetMapping("/rescheduledAppointmentList")
@@ -122,7 +126,7 @@ public class RescheduleAppointmentRest {
 					+ "<h4>GREETINGS FORM BANGALORE NETHRALAYA !!!</h4>"
 					+ "<p>"
 					+ "Hi "+appointmentId.getPatientName()+", <br>"
-					+ "You Have Opted for Reschedule of Appointment on :"+availableTimeSlot.getDate()
+					+ "Your Appointment is scheduled to :"+availableTimeSlot.getDate()
 					+ "<br/>"
 					+ "At "+availableTimeSlot.getSlot().getStartTime()+" , At Our Branch : "+ availableTimeSlot.getBranch().getBranchName()
 					+ "</p>"
@@ -132,6 +136,15 @@ public class RescheduleAppointmentRest {
 					+ "</body> </html>";
 			
 			this.reschedultEmailSender(email, subject, text);
+			
+			String msg = "Dear "+appointmentId.getPatientName()+",\r\n" + 
+					"Your appointment is rescheduled to "+availableTimeSlot.getSlot().getStartTime()+" on "+availableTimeSlot.getDate()+", with "+availableTimeSlot.getDoctor().getUsername()+",\r\n" + 
+					"Bangalore Nethralaya "+availableTimeSlot.getBranch().getBranchName()+" branch.";
+			String phoneNumber = appointmentId.getContactNumber();
+			
+			if(phoneNumber != null && phoneNumber != "") {
+				messageService.sendMessage(msg, phoneNumber);
+			}
 			
 			return new ResponseEntity<>(HttpStatus.ACCEPTED);
 		}else {

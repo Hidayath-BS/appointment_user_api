@@ -157,10 +157,14 @@ public class OnlineAppointmentsRest {
 			this.appointmentEmail(appointment.getPatientUser().getEmail(),subject, text);
 			
 			//message
-			String text1 = "Hi Dear "+appointment.getPatientName()+" , Your apointment scheduled on date: "+appointment.getDate()+" ,\r\n" + 
-					"Appointment Time : "+appointment.getSlot().getSlot().getStartTime()+ "\r\n"+
-					"Team , BANGALORE NETHRALAYA";
-			msgService.sendSmsAppointmet(appointment.getContactNumber(), text1);
+//			String text1 = "Hi Dear "+appointment.getPatientName()+" , Your apointment scheduled on date: "+appointment.getDate()+" ,\r\n" + 
+//					"Appointment Time : "+appointment.getSlot().getSlot().getStartTime()+ "\r\n"+
+//					"Team , BANGALORE NETHRALAYA";
+			
+			String msg = "Dear "+appointment.getPatientName()+",\r\n" + 
+					"Your appointment is booked with "+appointment.getSlot().getDoctor().getUsername()+" on "+appointment.getDate()+" at Bangalore Nethralaya, "+appointment.getSlot().getBranch().getBranchName()+". at "+appointment.getSlot().getSlot().getStartTime()+".\r\n" + 
+					"This is for your information, Please wait for your turn.";
+			msgService.sendMessage(msg, appointment.getPatientUser().getMobileNumber());
 			
 //			if(json.getString("payment_method").equals("ONLINE")) {
 //				
